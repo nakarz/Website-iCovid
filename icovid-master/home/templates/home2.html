@@ -1,0 +1,374 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>iCovid Home</title>
+        <!-- {% load static %}  -->
+    
+        <!-- Bootstrap icons-->
+        <!-- <link href="{% static 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css' %}" rel="stylesheet" /> -->
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'styles.css' %}" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js" integrity="sha512-GMGzUEevhWh8Tc/njS0bDpwgxdCJLQBWG3Z2Ct+JGOpVnEmjvNx6ts4v6A2XJf1HOrtOsfhv3hBKpK9kE5z8AQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <style>
+            ul#ratings li{
+                display: inline-block;
+            }
+
+            .col-lg-4{
+                display:inline-block;
+            }
+         
+        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body class="d-flex flex-column h-100">
+       
+        <main class="flex-shrink-0">
+            {% include "utilities_choosing_navbar.html" %}
+            <!-- Header-->
+            <header class="bg-dark py-5">
+                <div class="container px-5">
+                    <div class="row gx-5 align-items-center justify-content-center">
+                        <div class="col-lg-8 col-xl-7 col-xxl-6">
+                            <div class="my-5 text-center text-xl-start">
+                                <h1 class="display-5 fw-bolder text-white mb-2">iCovid</h1>
+                                <p class="lead fw-normal text-white-50 mb-4" style ="color:white">A platform where people can exchange informations about Covid-19 and also
+                                    discuss the most updated topic about Covid-19</p>
+                                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                                    <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#articles">Look for News</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center" style="background-color:white ; border-radius: 10px;" ><canvas id="indo_chart" style="padding: 1em 0 0.5em 0;"></canvas></div>
+                    </div>
+                </div>
+            </header>
+            <!-- Testimonial section-->
+            <section class="py-0" id="articles">
+            <div class="container px-5 my-5">
+                <div class="row gx-5 justify-content-center">
+                    <div class="col-lg-8 col-xl-6">
+                        <div class="text-center">
+                            <h2 class="fw-bolder">Read Latest Articles</h2>
+                            <p class="lead fw-normal mb-5" style="color: rgb(37, 37, 37);">Read the latest articles in our website. Go to the News Feature for more !</p>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="row gx-5 ">
+                    {% for article in articleList %}
+                    <div class="col-lg-4 mb-5">
+                        <div class="card h-100 shadow border-0">
+                            <img class="card-img-top" src = {{article.articleImage.url}} alt="..." width="600" height="350"/>
+                            <div class="card-body p-4">
+                                <!-- <a class="text-decoration-none link-dark stretched-link" href="/news/read/{{firstURL}}/"><h5 class="card-title mb-3">{{firstArticle.title}}</h5></a> -->
+                                <p class="card-text mb-0">{{article.summary}}</p>
+                            </div>
+                         
+                            <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                                <div class="d-flex align-items-end justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <!-- <img class="rounded-circle me-3" src="https://dummyimage.com/40x40/ced4da/6c757d" alt="..." /> -->
+                                        <div class="small">
+
+                                            <div class="text-muted">{{article.postDate}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            <!-- gatau dah section-->
+            <div class="py-5 bg-light">
+                <div class="container px-5 my-5">
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-lg-10 col-xl-7">
+                            <div class="text-center">
+                                <div class="fs-4 mb-4 fst-italic">"iCovid has helped me find the newest covid medicine in town ! I highly recommend this website !</div>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <img class="rounded-circle me-3" src="https://dummyimage.com/40x40/ced4da/6c757d" alt="..." />
+                                    <div class="fw-bold">
+                                        Tom Ato
+                                        <span class="fw-bold text-primary mx-1">/</span>
+                                        CEO, Pomodoro
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Testimonial section-->
+             <section class="py-0" id="features">
+                <div class="container px-5 my-4">
+                    <div class="row gx-5">
+                        <div class="col-lg-4 mb-5 mb-lg-0"><h2 class="fw-bolder mb-0">Message from Our Users</h2></div>
+                        <div class="col-lg-8">
+                            <div class="row gx-5 row-cols-1 row-cols-md-2"> 
+                                {% for feedback in feedbacks %}
+                                <div class="col mb-5 h-100">
+                                    <h1 class="h3 fw-bolder mb-0" style="color: rgb(207, 178, 14);">{{feedback.ratings}} stars </h1>
+                                    <br>
+                                    <h2 class="h5">{{feedback.pengirim}} </h2>
+                                    <p class="mb-0">{{feedback.message}}</p>
+                                </div>
+                                {% endfor %}
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Blog preview section-->
+            <section class="py-0">
+                <div class="container px-5 my-3">
+                        <div class ='Form Feedback'></div>
+                        <h2 class="fw-bolder mb-0">Leave Us Feedbacks</h2>
+                        <br> 
+                        <form action="" method="post" class="form-control"  >
+                            {% csrf_token %}
+                            <ul class="ratingscale" style="list-style-type:none;">
+                                <br> 
+                                <label>Sender</label>
+                                <li id="pengirim" class="pengirim">{{ form.pengirim }}</li>
+                                <br> 
+                                <label>Message</label>
+                                <li id="message" class="message">{{ form.message }}</li>
+                                <br> 
+                                <label>Ratings</label>
+                                <li id="ratings" class="ratings">{{ form.ratings }}</li>
+                                <br> 
+                                <button type="submit" class="btn btn-primary">Submit</button>  
+                            </ul> 
+                        </form>        
+                        </div>
+
+            {% if user.is_authenticated %}
+            <div style="margin-left: 100px;">
+                <h2 class="fw-bolder mb-0 py-0 ">Feedback History</h2>
+                <br>
+                <p>Edit or Delete your feedback history</p>
+            </div>
+       
+            <div class="w-100 d-flex justify-content-center">
+            
+            <table class="table w-75">
+                <thead>
+                  <tr>
+                    <th scope="col">Timefield</th>
+                    <th scope="col">Message</th>
+                    <th scope="col">Ratings</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% if feedbacksAll %}
+                        {% for history in feedbacksAll %}
+                            <tr>
+                                <td>{{ history.created_at }}</td>
+                                <td>{{ history.message}}</td>
+                                <td>{{ history.ratings }}</td>
+                                <td>
+                                    <button type="button" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-message={{ history.message }} data-ratings={{ history.ratings }} data-pk={{ history.pk }}>Edit</button>
+                                    <button type="button" pk={{ history.pk }} class="delete-feedback btn btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+    
+            <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Edit</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Message</label>
+                            <input type="textarea" class="form-control message" id="modal_message" value="" placeholder="Type message">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Ratings</label>
+                            <select name="ratings" class="form-control ratings" id="modal_ratings" value ="">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                              </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" pk="" class="edit-feedback btn btn-primary">Save</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+    
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    
+            <script>
+                var exampleModal = document.getElementById('exampleModal')
+                exampleModal.addEventListener('show.bs.modal', function (event) {
+                    // Button that triggered the modal
+                    var button = event.relatedTarget
+                    // Extract info from data-* attributes
+                    var message = button.getAttribute('data-message')
+                    var ratings = button.getAttribute('data-ratings')
+                    var pk = button.getAttribute('data-pk')
+    
+                    // If necessary, you could initiate an AJAX request here
+                    // and then do the updating in a callback.
+                    
+                    // Get the modal's content.
+                    var modalBodyMessage = exampleModal.querySelector('.modal-body .message')
+                    var modalBodyRatings = exampleModal.querySelector('.modal-body .ratings')
+                    var modalSaveButton = exampleModal.getElementsByClassName("edit-feedback")
+    
+                 
+                    modalBodyMessage.value = message
+                    modalBodyRatings.value = ratings
+                    modalSaveButton.pk = pk
+                })
+    
+                function getCookie(cname) {
+                    let name = cname + "=";
+                    let decodedCookie = decodeURIComponent(document.cookie);
+                    let ca = decodedCookie.split(';');
+                    for(let i = 0; i <ca.length; i++) {
+                        let c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                            c = c.substring(1);
+                        }
+                        if (c.indexOf(name) == 0) {
+                            return c.substring(name.length, c.length);
+                        }
+                    }
+                    return "";
+                }
+    
+                $(document).ready(function(){
+                    $(".edit-feedback").click(function() {
+                        $.ajax({
+                            url: '{% url "home/:edit_feedback" %}',
+                            method: "POST",
+                            headers: {
+                                "X-CSRFToken": getCookie("csrftoken")
+                            },
+                            data: {
+                                "id": exampleModal.getElementsByClassName("edit-feedback").pk,
+                                "message": document.getElementById('modal_message').value,
+                                "ratings": document.getElementById('modal_ratings').value,
+                            },
+                            success: function(result){
+                                location.reload();
+                            },
+                            error: function (err) {
+                                console.error(err)
+                            }
+                        })
+                    })
+    
+                    $(".delete-feedback").click(function(){
+                        $.ajax({
+        
+                            url: '{% url "home/:delete_feedback" %}',
+                            method: "POST",
+                            headers: {
+                                "X-CSRFToken": getCookie("csrftoken")
+                            },
+                            data: {
+                                "id": $(this).attr('pk')
+                            },
+                            success: function(result){
+                                location.reload();
+                            },
+                            error: function (err) {
+                                console.error(err)
+                            }
+                        });
+                    });
+                });
+            </script>
+        </div>
+    </section>
+</main>
+        {% endif %}
+                        
+        <!-- Footer-->
+        <footer class="bg-dark py-4 mt-auto">
+            <div class="container px-5">
+                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                    <div class="col-auto"><div class="small m-0 text-white">Copyright &copy; Your Website 2021</div></div>
+                    <div class="col-auto">
+                        <a class="link-light small" href="#!">Privacy</a>
+                        <span class="text-white mx-1">&middot;</span>
+                        <a class="link-light small" href="#!">Terms</a>
+                        <span class="text-white mx-1">&middot;</span>
+                        <a class="link-light small" href="#!">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+ 
+        <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
+        <!-- Core theme JS-->
+        <script>
+            $.getJSON("https://apicovid19indonesia-v2.vercel.app/api/indonesia/harian", 
+            function(data){
+                const banyakData = 7;
+                const dataset_positif2 = [];
+                const dataset_sembuh2 = [];
+                const dataset_meninggal2 = [];
+                const dateset = [];
+                for (let i = data.length-banyakData; i < data.length; i++){
+                    dataset_positif2.push(data[i].positif);
+                    dataset_sembuh2.push(data[i].sembuh);
+                    dataset_meninggal2.push(data[i].meninggal);
+                    dateset.push(data[i].tanggal.split('T')[0]);
+                }
+        
+                const indo_chart = document.getElementById('indo_chart').getContext('2d');
+                const new_chart = new Chart(indo_chart, {
+                    type: 'line',
+                    data: {
+                        labels: dateset,
+                        datasets: [{
+                            label: 'Positif',
+                            data: dataset_positif2,
+                            backgroundColor: 'rgb(255, 188, 188)',
+                            borderColor: 'rgb(255, 188, 188)'
+                        },{
+                            label: 'Sembuh',
+                            data: dataset_sembuh2,
+                            backgroundColor: 'rgb(40, 255, 191)',
+                            borderColor: 'rgb(40, 255, 191)',
+                        },{
+                            label: 'Meninggal',
+                            data: dataset_meninggal2,
+                            backgroundColor: 'rgb(243, 139, 160)',
+                            borderColor: 'rgb(243, 139, 160)',
+                        }]
+                    },
+                })
+                
+            });
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>iCovid - See Log</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/utilities_styles.css' %}" />
+
+  </head>
+  <body>
+    {% include 'utilities_choosing_navbar.html' %}              
+
+    <!-- See Log in table--> 
+    <div class="container mb-5 mt-3">
+      <table class="table table-striped table-bordered" id="log-table" 
+      style="width: 100%; background: whitesmoke; color: black; border-radius: 15px;">
+        <thead>
+          <tr>
+            <th style="border-radius: 15px 15px 0 0;">Log of iCovid</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- START LOOP SECTION -->
+          {% for line in log_content %}
+          <tr>
+            <td>{{ line }}</td>
+          </tr>  
+          {% endfor %}
+          <!-- END LOOP SECTION -->
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+    <script type="text/javascript">
+      $('#log-table').DataTable({
+        ordering: false,
+        searching: false,
+        lengthMenu:[[10,25,50,100,-1], [10,25,50,100,"All"]]
+      });
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
+  </body>
+</html>

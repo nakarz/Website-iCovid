@@ -1,0 +1,49 @@
+<!-- link and script -->
+{% load static %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/utilities_styles.css' %}" />
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- end -->
+
+<!-- Navbar Admin -->
+<header id="utilities" style="background-color: #83aae1;">
+  <a id="utilities" href="/home/" style="margin-right: auto;"><img class="logo" src="{% static 'images/icovid-logo.png' %}" alt="logo" /></a>
+  <div class="drop" id="utilities">
+    <button id="utilities" class="dbutton">Admin</button>
+    <div class="dcontent" id="utilities">
+      <a id="utilities" href="/news/add/"                      >Post article</a>
+      <a id="utilities" href="/administrator/make-announcement">Make announcement</a>
+      <a id="utilities" href="/administrator/"                 >See log</a>
+    </div>
+  </div> 
+  <nav> 
+    <ul class="navibar" id="utilities">
+      <li id="utilities"><a id="utilities" href="/home/"       >Home</a></li>  
+      <li id="utilities"><a id="utilities" href="/news/"       >News</a></li>
+      <li id="utilities"><a id="utilities" href="/forum"       >Forum</a></li>
+      <li id="utilities"><a id="utilities" href="/tracker"     >Tracking</a></li>
+      <li id="utilities"><a id="utilities" href="/auth/logout/" >Log out</a></li>  
+    </ul>
+  </nav>
+</header>
+<!--end navbar-->
+
+<!-- Announcement --> 
+<button id="utilities" data-target="#announcementModal" data-toggle="modal" 
+style="padding: 5px 15px; margin-top: 10px; background: #ffd4fd; width: 97%; margin-bottom: 10px;" >Announcement</button>
+
+{% include 'utilities_modal_announcement.html' %} 
+
+<script type="text/javascript">
+$(document).ready(function() { 
+  $.getJSON("/administrator/get-announcement",
+  function(data){ 
+    $('#announcementTitle').text(data[data.length-1]["fields"]["title"].toLocaleString("en-US"));
+    $('#announcementMessage').text(data[data.length-1]["fields"]["message"].toLocaleString("en-US"));
+  });      
+})
+</script>
+<!-- end Announcement -->

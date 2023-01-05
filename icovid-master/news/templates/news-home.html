@@ -1,0 +1,145 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>iCovid News - Home</title>
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'styles.css' %}" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    </head>
+    <body class="d-flex flex-column">
+        {% include "utilities_choosing_navbar.html" %}
+        <main class="flex-shrink-0">
+            <!-- Latest Post-->
+            <section class="py-5">
+                <div class="container px-5">
+                    
+                    <h1 class="fw-bolder fs-4 mb-4"> Latest Post
+                        {% if request.user.is_superuser %}
+                        <a type="button" class="btn btn-primary mb-2" style="margin-left: 15px; padding: 5px;" href="/news/add/">Add an Article</a>
+                        {% endif %}
+                    </h1>
+                    <div class="card border-0 shadow rounded-3 overflow-hidden">
+                        <div class="card-body p-0">
+                            <div class="row gx-0">
+                                <div class="col-lg-6 col-xl-5 py-lg-5">
+                                    <div class="p-4 p-md-5">
+                                        <div class="h2 fw-bolder">{{firstArticle.title}}</div>
+                                        <p>{{ firstArticle.summary }}</p>
+                                        <a class="stretched-link text-decoration-none" href="/news/read/{{firstArticle.title}}/">Click to read more<i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-xl-7">
+                                    <div class="bg-featured-blog">
+                                        <img src = "/news/media/{{ firstArticle.articleImage }}" alt="" width="700" height="380">
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </section>
+            
+            <!-- Blog preview section-->
+            <section class="py-5">
+                <div class="container px-5">
+                    <h2 class="fw-bolder fs-4 mb-4">Previous Posts</h2>
+                    <div class="row gx-5 post-wrapper">
+                        {% for article in nextThreeArticles %}
+                        <div class="col-lg-4 mb-5">
+                            <div class="card h-100 shadow border-0">
+                                <img class="card-img-top" src="/news/media/{{article.articleImage}}" alt="..." width="600" height="220"/>
+                                <div class="card-body p-4">
+                                    <a class="text-decoration-none link-dark stretched-link" href="#!"><div class="h5 card-title mb-3">{{article.title}}</div></a>
+                                    <p class="card-text mb-0">{{article.summary}}</p>
+                                    <a class="stretched-link text-decoration-none" href="/news/read/{{article.title}}/">Click to read more<i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                                <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                                    <div class="d-flex align-items-end justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <div class="small">
+                                                <div class="text-muted">{{article.postDate}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                    </div>
+                    {% if articleList|length > 4 %}
+                    <button class="btn btn-dark" id="loadmoreBtn" style="background-color:rgb(13,110,253); border: none;">Load More</button>
+                    {% endif %}
+                    
+                    
+                </div>
+            </section>
+        </main>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+        <script>
+            $(document).ready(function(){
+                $("#loadmoreBtn").on('click',function(){
+                    var _currentResult=$(".mb-5").length;
+                    // Run Ajax
+                    $.ajax({
+                        url:"{% url 'news:load-more' %}",
+                        type:'post',
+                        data:{
+                            'offset':_currentResult,
+                            'csrfmiddlewaretoken':"{{csrf_token}}"
+                        },
+                        dataType:'json',
+                        beforeSend:function(){
+                            $("#loadmoreBtn").addClass('disabled').text('Loading..');
+                        },
+                        success:function(res){
+                            var _html='';
+                            var json_data=$.parseJSON(res.posts);
+                            console.log("test")
+                            $.each(json_data,function(index,data){
+                                _html+='<div class="col-lg-4 mb-5">\
+                            <div class="card h-100 shadow border-0">\
+                                <img class="card-img-top" src="/news/media/'+data.fields.articleImage+'/" alt="..." width="600" height="220"/>\
+                                <div class="card-body p-4">\
+                                    <a class="text-decoration-none link-dark stretched-link" href="#!"><div class="h5 card-title mb-3">'+data.fields.title+'</div></a>\
+                                    <p class="card-text mb-0">'+data.fields.summary+'</p>\
+                                    <a class="stretched-link text-decoration-none" href="./read/'+data.fields.title.replaceAll(" ", "%20").replaceAll("?", "%3F").replaceAll(".", "%2E").replaceAll(",", "%2C").replaceAll("!", "%21") + '/'+'">Click to read more<i class="bi bi-arrow-right"></i></a>\
+                                </div>\
+                                <div class="card-footer p-4 pt-0 bg-transparent border-top-0">\
+                                    <div class="d-flex align-items-end justify-content-between">\
+                                        <div class="d-flex align-items-center">\
+                                            <div class="small">\
+                                                <div class="text-muted">'+data.fields.postDate+'</div>\
+                                            </div>\
+                                        </div>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </div>';
+                            });
+                            $(".post-wrapper").append(_html);
+                            var _countTotal=$(".mb-5").length;
+                            if(_countTotal==res.totalResult){
+                                $("#loadmoreBtn").remove();
+                            }else{
+                                $("#loadmoreBtn").removeClass('disabled').text('Load More');
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </body>
+</html>
