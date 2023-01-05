@@ -1,1 +1,1 @@
-# Website-iCovid
+# iCovid Website
